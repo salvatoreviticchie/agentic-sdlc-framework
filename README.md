@@ -79,6 +79,7 @@ Low-risk changes combine Gates 2 and 3: you review the specs and the design toge
 | `/sdlc:review CR-NNN` | Runs the reviewer only |
 | `/sdlc:gate <0-4> [FEAT-NNN \| CR-NNN] approve\|reject "<note>"` | Records your gate decision (Gate 0: the plan of a project or feature) |
 | `/sdlc:status` | Shows every CR, its stage and the next command |
+| `/sdlc:help [command \| "question"]` | Lists every command, explains one, or answers a question from `docs/how-to.md` and `plugins/sdlc/templates/gates.md` |
 
 The exact records each gate writes are in [gates.md](plugins/sdlc/templates/gates.md), which `/sdlc:init` copies to `docs/gates.md` in your project. How to approve, change or reject at each gate, with examples: [docs/how-to.md](docs/how-to.md#approve-change-or-reject-at-each-gate).
 

@@ -23,7 +23,7 @@ Explain the flow like this, in your own words:
 3. **Specify, design**: agents turn the CR into updated specs (Gate 2) and a design note (Gate 3).
 4. **Build**: a developer agent implements the design on a branch, with tests.
 5. **Review and merge**: a reviewer agent checks it against the specs; you approve at Gate 4 and it is merged.
-Add one line: "Agents do the work; you decide at every gate. /sdlc:status shows where each CR is."
+Add one line: "Agents do the work; you decide at every gate. /sdlc:status shows where each CR is; /sdlc:help lists every command or answers a question."
 
 ## 3. Say what to run first
 Work out where the project is:
