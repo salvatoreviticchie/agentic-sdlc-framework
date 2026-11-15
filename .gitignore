@@ -1,0 +1,6 @@
+.DS_Store
+__pycache__/
+
+# Full run outputs can contain file contents; keep only runs/costs.csv tracked
+runs/*.json
+runs/*.txt
