@@ -22,6 +22,10 @@ Subcommands:
   agent NAME
       Prints JSON about the agent's definition: prompt version, the definition
       (commit hash, or plugin@version when installed) and an error if it must not run.
+  cochange [--commits N]
+      Prints JSON: the pairs of files in the app folder that most often change in
+      the same commit (last N commits, default 300; commits touching more than 30
+      files are skipped as bulk changes). The explorer's "Structure" section uses it.
 
 Run it from inside your project (any folder of its git repository). The plugin
 is the folder above this script, so the skills call it as
@@ -488,6 +492,37 @@ def log(root, cr, stage, event, agent=None, slice_number=None, outcome="", note=
 
 # ---------------------------------------------------------------- test
 
+def cochange(root, commits=300, top=20, bulk=30):
+    app = Project(root, "CR-000").settings().get("App folder", "").strip().strip("/")
+    result = {"app_folder": app, "commits_read": 0, "commits_skipped_bulk": 0, "pairs": [], "note": ""}
+    if not app:
+        result["note"] = "CLAUDE.md has no App folder line."
+        return result
+    code, out = git("log", f"-n{commits}", "--no-merges", "--name-only", "--format=format:@@commit", "--", app, root=root)
+    if code != 0 or not out:
+        result["note"] = "No git history for the app folder."
+        return result
+    counts, changes = {}, {}
+    for block in out.split("@@commit")[1:]:
+        files = sorted({line.strip() for line in block.splitlines() if line.strip()})
+        if not files:
+            continue
+        if len(files) > bulk:
+            result["commits_skipped_bulk"] += 1
+            continue
+        result["commits_read"] += 1
+        for f in files:
+            changes[f] = changes.get(f, 0) + 1
+        for i, a in enumerate(files):
+            for b in files[i + 1:]:
+                counts[(a, b)] = counts.get((a, b), 0) + 1
+    ranked = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:top]
+    result["pairs"] = [{"files": [a, b], "together": n, "changes": [changes[a], changes[b]]} for (a, b), n in ranked if n > 1]
+    if not result["pairs"]:
+        result["note"] = "No two files changed together more than once."
+    return result
+
+
 def test(root):
     command = Project(root, "CR-000").settings().get("Test command")
     if not command:
@@ -516,6 +551,8 @@ def main():
     sub.add_parser("test")
     p_agent = sub.add_parser("agent")
     p_agent.add_argument("name")
+    p_co = sub.add_parser("cochange")
+    p_co.add_argument("--commits", type=int, default=300)
     args = parser.parse_args()
 
     if args.command == "agent":
@@ -531,6 +568,8 @@ def main():
             print(json.dumps(state(root, args.cr), indent=2))
         else:
             sys.exit("Error: the ID looks like CR-005 or FEAT-001.")
+    elif args.command == "cochange":
+        print(json.dumps(cochange(root, args.commits), indent=2))
     elif args.command == "log":
         log(root, args.cr, args.stage, args.event, args.agent, args.slice, args.outcome, args.note)
     else:

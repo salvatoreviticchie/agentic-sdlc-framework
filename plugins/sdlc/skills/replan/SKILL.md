@@ -1,7 +1,7 @@
 ---
 description: Update a feature's plan after one of its CRs is merged (or after a Gate 0 rejection)
 argument-hint: FEAT-NNN
-allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py agent *), Bash(git status:*), Bash(git log:*), Bash(git diff:*), Bash(ls:*), Bash(date:*)
+allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py* agent *), Bash(git status:*), Bash(git log:*), Bash(git diff:*), Bash(ls:*), Bash(date:*)
 disable-model-invocation: true
 ---
 Re-plan "$ARGUMENTS". Explain each step in one plain sentence.

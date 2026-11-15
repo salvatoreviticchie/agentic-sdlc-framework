@@ -7,7 +7,7 @@ Lines that start with `/` are typed into Claude Code. Other commands are typed i
 You decide: after each stage there is a *gate*, where you approve, change or reject what the agent did.
 Every reply ends with a **Next:** line, the command to type next. If you only remember one thing, remember that: follow the Next: line.
 
-Contents: [Install](#install-and-update) · [A: one change](#walkthrough-a-an-existing-codebase-one-change) · [B: a big feature](#walkthrough-b-a-big-feature) · [C: a new project](#walkthrough-c-a-new-project) · [Gates](#approve-change-or-reject-at-each-gate) · [Risk tiers](#risk-tiers) · [Cost](#cost-and-context-tips) · [Troubleshooting](#troubleshooting) · [FAQ](#faq)
+Contents: [Install](#install-and-update) · [A: one change](#walkthrough-a-an-existing-codebase-one-change) · [B: a big feature](#walkthrough-b-a-big-feature) · [C: a new project](#walkthrough-c-a-new-project) · [Gates](#approve-change-or-reject-at-each-gate) · [Architecture decisions](#architecture-decisions) · [Risk tiers](#risk-tiers) · [Cost](#cost-and-context-tips) · [Add a stack profile](#add-a-stack-profile) · [Known limitations](#known-limitations-120) · [Troubleshooting](#troubleshooting) · [FAQ](#faq)
 
 ## Install and update
 
@@ -272,6 +272,29 @@ Low-risk CRs take Gates 2 and 3 as one: `/sdlc:gate 2 CR-001 approve "..."` reco
 If a gate has open questions you haven't answered, it lists them and asks "Approve anyway? (yes/no)".
 Every decision is a commit, such as `CR-001: Gate 2 approved`. The exact records are in `docs/gates.md`.
 
+## Architecture decisions
+
+Some questions are bigger than one CR: one package or several? A monolith or services? `/sdlc:decide` answers one with you and writes it down as an *ADR* (architecture decision record: one file per decision, with the options, the choice, and when to revisit it).
+
+```
+/sdlc:decide "one package or several?"
+```
+
+1. It picks the *stack profile* (the packaging options for your language) from the `Stack:` line in `CLAUDE.md` or your build files, and says which one it used.
+2. It asks 6 questions, one at a time, each with a suggested answer: teams, what changes often, what must scale or deploy on its own, compliance, release cadence, and who runs it at 3am. It recommends nothing until you have answered.
+3. It starts from one deployable unit with clear internal modules, and recommends a split only when one of your answers justifies it, saying what the split costs.
+4. It writes `docs/adr/ADR-001.md` with Status Proposed, including the triggers that would make you revisit it.
+
+A tech lead or architect then decides:
+
+```
+/sdlc:gate adr ADR-001 approve "One team, one release: one package with clear modules"
+```
+
+The ADR becomes Accepted, in a commit `ADR-001: approved (ADR gate)`. From then on the architect follows it in every design, and the reviewer reports any change that breaks it as Major. To change your mind later, run `/sdlc:decide` again: the new ADR supersedes the old one when it is approved. A reject sets its Status to Rejected, with the date and your note, and it binds nobody; `/sdlc:decide ADR-001` revises it with your note and makes it Proposed again.
+
+For existing code, `/sdlc:explore` adds a "Structure" section to `docs/system-map.md` (modules, dependencies, files that change together, suggested boundaries), which `/sdlc:decide` reads. For a new project, the planner writes the stack and structure ADRs for you.
+
 ## Risk tiers
 
 Every CR has `Risk: low` or `Risk: high`; `/sdlc:new-cr` and the planner suggest one, and you decide.
@@ -289,6 +312,24 @@ Every CR has `Risk: low` or `Risk: high`; `/sdlc:new-cr` and the planner suggest
 - **Build big changes in slices.** When the architect lists "Slices:", the developer builds one slice at a time, and `/sdlc:ship` runs the tests after each one.
 
 More in [cost-and-context.md](cost-and-context.md).
+
+## Add a stack profile
+
+A stack profile is one short Markdown file in `plugins/sdlc/templates/stacks/`, for example `go.md`, that tells `/sdlc:decide`, the planner and the architect the packaging options for that stack. `generic.md` is always read first; the profile adds the stack's own terms.
+
+The plugin has six: `generic`, `salesforce`, `java`, `node`, `dotnet` and `python`; `/sdlc:init` offers all six and writes your choice to the `Stack:` line in `CLAUDE.md`. `java.md` and `dotnet.md` are draft profiles, not yet tested on a real project. Corrections welcome.
+
+1. Copy `python.md` as a starting point and keep its four sections: **Detect** (the `Stack:` value and the build files that identify the stack), **Options** (from least to most split, in the stack's own words), **Trade-offs in <stack> terms** (deployment, testing, versioning, operations), and **Common mistakes**.
+2. Keep it under about 40 lines, and write only facts you can check in the stack's own documentation.
+3. Add the build file to the detection list in `plugins/sdlc/skills/decide/SKILL.md` (step 1).
+4. Try it: set `Stack: <name>` in a test project's `CLAUDE.md`, run `/sdlc:decide "one package or several?"`, and check it says "Using the <name> profile".
+5. Open a pull request.
+
+## Known limitations (1.2.0)
+
+- The reviewer's check for ADR violations (a change that breaks an Accepted ADR is reported as Major) is not yet tested end to end.
+- The ADR reject path (`/sdlc:gate adr ADR-NNN reject "<note>"`, Status Rejected, then `/sdlc:decide ADR-NNN` to revise it) is not yet tested end to end.
+- The Java and .NET stack profiles (`java.md`, `dotnet.md`) are drafts, not yet tested on a real project. Corrections welcome.
 
 ## Troubleshooting
 

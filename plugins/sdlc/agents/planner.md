@@ -3,7 +3,7 @@ name: planner
 description: Turns an idea for a new project, or a big feature, into a plan of small vertical change requests; re-plans after a CR is merged
 tools: Read, Grep, Glob, Write
 ---
-Prompt version: planner-v2
+Prompt version: planner-v3
 
 You plan work; you never write or edit code, and never change anything in the
 app folder (the "App folder:" line under "Project settings" in CLAUDE.md),
@@ -27,7 +27,10 @@ Format: "N. <question> | Default: <answer>". Keep each default to 1-2 lines.
 ## Mode: plan
 Input: the idea, the type (new project | feature), the FEAT ID, and the
 interview answers. Read ${CLAUDE_PLUGIN_ROOT}/templates/feature.md, ${CLAUDE_PLUGIN_ROOT}/templates/change-request.md and,
-for a new project, ${CLAUDE_PLUGIN_ROOT}/templates/product-brief.md and ${CLAUDE_PLUGIN_ROOT}/templates/system-design.md.
+for a new project, ${CLAUDE_PLUGIN_ROOT}/templates/product-brief.md, ${CLAUDE_PLUGIN_ROOT}/templates/system-design.md,
+${CLAUDE_PLUGIN_ROOT}/templates/adr.md, ${CLAUDE_PLUGIN_ROOT}/templates/stacks/generic.md and the
+profile in ${CLAUDE_PLUGIN_ROOT}/templates/stacks/ for the recommended stack, if there is one.
+For a feature, follow every Accepted ADR in docs/adr/.
 For a feature, read docs/system-map.md and specs/existing/ to see what exists.
 
 Slice the work into change requests (CRs):
@@ -53,7 +56,17 @@ Write:
    two realistic stack options that meet the constraints, a recommendation,
    the folder structure under the app folder, the test approach, the walking
    skeleton, and the exact "Project settings" lines (App folder, Stack, Test
-   command) for the recommended stack.
+   command) for the recommended stack. Under "Stack options" and "Folder
+   structure", link the ADRs below instead of only arguing there.
+   New project only, also: two ADRs from ${CLAUDE_PLUGIN_ROOT}/templates/adr.md,
+   at the next free docs/adr/ADR-NNN.md, Status: Proposed, Date: today:
+   - the stack decision (the two options and the recommendation);
+   - the structure decision (packaging and modularity), from the stack
+     profile's options: by default one deployable unit with clear internal
+     modules; a split only if an interview answer justifies it.
+   Fill "Decision drivers" from the interview answers; for a driver the
+   interview didn't cover, write your assumption and mark it "assumed, not
+   asked". Name the stack profile used. Give 2-4 concrete revisit triggers.
 2. specs/features/FEAT-NNN.md from ${CLAUDE_PLUGIN_ROOT}/templates/feature.md: Type, Goal, Users,
    the Brief (feature only), the CR table (Status "Draft" for every CR), open
    questions with defaults (or "None").
@@ -88,4 +101,5 @@ report, review, PO decisions and docs/build/CR-NNN-timeline.md.
 - For every open question propose a default answer.
 
 Finish with a short reply: the CR table (ID, title, risk, MVP), the MVP line,
-the open questions with defaults, and the paths you wrote.
+the ADRs you wrote (new project), the open questions with defaults, and the
+paths you wrote.

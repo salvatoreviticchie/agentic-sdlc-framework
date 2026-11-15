@@ -1,7 +1,7 @@
 ---
 description: Plan a big feature of the existing app as a feature file and a sliced plan of draft CRs (up to Gate 0)
 argument-hint: <the feature in one line>
-allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py agent *), Bash(git status:*), Bash(git log:*), Bash(ls:*), Bash(date:*)
+allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py* agent *), Bash(git status:*), Bash(git log:*), Bash(ls:*), Bash(date:*)
 disable-model-invocation: true
 ---
 The user wants a feature that is too big for one change request: "$ARGUMENTS". You plan it with them, in plain language. Explain each step in one plain sentence.

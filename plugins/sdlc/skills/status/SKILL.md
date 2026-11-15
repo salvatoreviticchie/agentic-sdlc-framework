@@ -1,6 +1,6 @@
 ---
 description: Show every CR with its current stage, last gate, and the next command to run
-allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py state *), Bash(git status:*), Bash(git log:*), Bash(git branch:*), Bash(git show:*), Bash(ls:*)
+allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py* state *), Bash(git status:*), Bash(git log:*), Bash(git branch:*), Bash(git show:*), Bash(ls:*)
 disable-model-invocation: true
 ---
 Show where the project is. Read only: change nothing.
@@ -32,6 +32,7 @@ Show where the project is. Read only: change nothing.
    Under it, one markdown table in the feature's table order: CR | Title | MVP | Status | Risk | Stage | Last gate | Next. A CR whose Status starts with "Draft" and has a "Feature:" line: Stage "Planned, waiting for Gate 0", Next "/sdlc:gate 0 <FEAT> approve \"<note>\"". A feature with Gate 0 approved and CRs left: its Next is "/sdlc:ship <FEAT>". Within a feature only one CR is next: the first in table order that isn't merged (`python3 "${CLAUDE_PLUGIN_ROOT}/scripts/ship.py" state <FEAT>` names it as "current_cr"). Give that CR its Next; for every later CR not yet started, Stage "Planned (after <the CR before it, or the CRs it depends on>)" and Next "—", so nobody starts CRs out of order.
    Then the CRs with no feature (no "Feature:" line, or "Feature: none") in the same table under "**Other CRs**".
    If there are no CRs, say so.
-4. One line on the current branch and whether there are uncommitted changes.
+4. Architecture decisions: if docs/adr/ has ADR-*.md files, a table "**ADRs**": ADR | Title | Status | Next. Status is the file's Status line (Proposed, Accepted (<date>), Rejected (<date>): <note>, or Superseded by ADR-MMM (<date>)); show a Rejected ADR's note, shortened to about 60 characters. A "Proposed" ADR with an "ADR rejected" line under "## Approval": if a "Revised by /sdlc:decide" line follows it, show "Proposed (revised after rejection <date>)"; if not, it was rejected by an older plugin version: show "Rejected (<date>)" and treat it as Rejected. Next: Proposed → /sdlc:gate adr <ADR> approve "<note>"; Rejected → /sdlc:decide <ADR> (to revise it), or — if you don't need it; Accepted or Superseded → —. Don't count Proposed ADRs as blocking any CR.
+5. One line on the current branch and whether there are uncommitted changes.
 
 Last line: "Next: " followed by the single most useful command (the earliest unfinished stage, /sdlc:ship <FEAT> for a feature in progress; for an empty project: /sdlc:new-project <idea> if the app folder is empty, /sdlc:explore if it has code but specs/existing/ is empty; /sdlc:new-cr <description> or /sdlc:new-feature <description> if every CR is merged).

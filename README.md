@@ -86,6 +86,7 @@ Low-risk changes combine Gates 2 and 3: you review the specs and the design toge
 | `/sdlc:new-feature <description>` | Plans a big feature of the existing app as a plan of draft CRs |
 | `/sdlc:replan FEAT-NNN` | Updates a feature's remaining CRs after one is merged |
 | `/sdlc:new-cr <description>` | Writes a change request with you, one question at a time |
+| `/sdlc:decide "<question>"` | An architecture decision (one package or several, monolith or services): a drivers interview, options in your stack's terms, and an ADR in `docs/adr/` |
 | `/sdlc:ship CR-NNN` | Runs every stage on its own and stops at each gate |
 | `/sdlc:ship FEAT-NNN` | Ships a feature's CRs in order, with the same stops |
 | `/sdlc:specify CR-NNN` | Runs the spec-writer only |
@@ -93,7 +94,8 @@ Low-risk changes combine Gates 2 and 3: you review the specs and the design toge
 | `/sdlc:build CR-NNN [slice]` | Runs the developer only, on branch `cr-nnn` |
 | `/sdlc:review CR-NNN` | Runs the reviewer only |
 | `/sdlc:gate <0-4> [FEAT-NNN \| CR-NNN] approve\|reject "<note>"` | Records your gate decision (Gate 0: the plan of a project or feature) |
-| `/sdlc:status` | Shows every CR, its stage and the next command |
+| `/sdlc:gate adr ADR-NNN approve\|reject "<note>"` | A tech lead or architect accepts or rejects an ADR; Accepted ADRs bind the architect and the reviewer |
+| `/sdlc:status` | Shows every CR, its stage and the next command, and every ADR with its status |
 | `/sdlc:help [command \| "question"]` | Lists every command, explains one, or answers a question from `docs/how-to.md` and `plugins/sdlc/templates/gates.md` |
 
 The exact records each gate writes are in [gates.md](plugins/sdlc/templates/gates.md), which `/sdlc:init` copies to `docs/gates.md` in your project. How to approve, change or reject at each gate, with examples: [docs/how-to.md](docs/how-to.md#approve-change-or-reject-at-each-gate).

@@ -3,7 +3,7 @@ name: explorer
 description: Reverse-engineers an existing codebase into a system map and specs
 tools: Read, Grep, Glob, Write
 ---
-Prompt version: explorer-v3
+Prompt version: explorer-v4
 
 You analyse the code in the app folder named under "Project settings" in
 CLAUDE.md ("App folder: ..."). Below, <app> means that folder. Never create,
@@ -21,8 +21,25 @@ Output 1: docs/system-map.md
 Start with "# System map: <app>". Sections: 1 Overview, 2 Data model,
 3 Components (modules, classes, functions), 4 Interfaces (UI, CLI, API,
 agents), 5 External services, 6 Tests (what is tested, how to run them),
-7 How they connect, 8 Risks. Write "None" under a section that doesn't apply.
-Number the risks; each names the file and line and says why it matters.
+7 How they connect, 8 Structure, 9 Risks. Write "None" under a section that
+doesn't apply. Number the risks; each names the file and line and says why it
+matters.
+
+Section 8 Structure (input for architecture decisions; you suggest, you never
+decide):
+- Modules or packages found: the build units (packages, projects, package
+  directories, workspaces) and the main source folders, with what each holds.
+- Dependencies between them: which module uses which (from imports, references
+  or build files), and any cycles.
+- Files that change together: from the co-change list you are given (pairs of
+  files changed in the same commits, from git history). Name the pairs that
+  cross a module boundary. If you were given none, write "No git history
+  given".
+- Coupling hot spots: files or modules many others depend on, or that change
+  with many others; each with the evidence.
+- Suggested natural boundaries: groups of files that belong together by
+  business capability, each with the reason. Write them as suggestions ("could
+  be a module"), never as decisions; the user decides with /sdlc:decide.
 
 Output 2: specs/existing/REQ-NNN.md (NNN = 001, 002, ...)
 One spec per capability: something a user, admin or another system can do or

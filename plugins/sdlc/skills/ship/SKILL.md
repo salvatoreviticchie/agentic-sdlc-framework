@@ -1,7 +1,7 @@
 ---
 description: Run every stage of an approved CR (or each CR of a feature, in order) on its own, stopping only when a gate is due
 argument-hint: CR-NNN | FEAT-NNN
-allowed-tools: Read, Glob, Grep, Write, Bash(python3 *scripts/ship.py *), Bash(python3 *scripts/run_agent.py *), Bash(git status:*), Bash(git log:*), Bash(git diff:*), Bash(git branch:*), Bash(git switch:*), Bash(ls:*)
+allowed-tools: Read, Glob, Grep, Write, Bash(python3 *scripts/ship.py*), Bash(python3 *scripts/run_agent.py*), Bash(git status:*), Bash(git log:*), Bash(git diff:*), Bash(git branch:*), Bash(git switch:*), Bash(ls:*)
 disable-model-invocation: true
 ---
 Ship "$ARGUMENTS": run the next stage, then the next, and keep going without asking, until a gate is due. You never record a gate yourself, and never push, merge or open a pull request; the PO does that. Explain each step in one plain sentence as you go.

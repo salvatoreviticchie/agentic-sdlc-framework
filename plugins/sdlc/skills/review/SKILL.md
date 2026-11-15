@@ -1,7 +1,7 @@
 ---
 description: Run the reviewer agent on a built CR branch before Gate 4
 argument-hint: CR-NNN
-allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py agent *), Bash(git status:*), Bash(git log:*), Bash(git diff:*), Bash(git branch:*), Bash(git switch:*), Bash(ls:*)
+allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py* agent *), Bash(git status:*), Bash(git log:*), Bash(git diff:*), Bash(git branch:*), Bash(git switch:*), Bash(ls:*)
 disable-model-invocation: true
 ---
 Stage: Review, for "$ARGUMENTS". Explain each step in one plain sentence.

@@ -13,7 +13,7 @@ For a new project. Written by the planner at /sdlc:new-project; approved at Gate
 - Cons: ...
 
 ## Recommendation
-<A or B, and why, in 2-3 lines>
+<A or B, and why, in 2-3 lines. The decision is docs/adr/ADR-NNN.md (stack); the structure decision is docs/adr/ADR-NNN.md.>
 
 ## Folder structure
 ```
@@ -30,7 +30,7 @@ app/
 ## Project settings
 The lines /sdlc:gate 0 copies into "Project settings" in CLAUDE.md:
 - App folder: app
-- Stack: <generic | salesforce>
+- Stack: <generic | salesforce | python | node | java | dotnet>
 - Test command: <command that runs every test from the repo root and exits 0 when they pass>
 
 ## Risks and open questions

@@ -1,6 +1,6 @@
 ---
 description: Check the setup, explain the pipeline, and say what to run first
-allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py agent *), Bash(git status:*), Bash(git log:*), Bash(git rev-parse:*), Bash(ls:*)
+allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py* agent *), Bash(git status:*), Bash(git log:*), Bash(git rev-parse:*), Bash(ls:*)
 disable-model-invocation: true
 ---
 You are helping a first-time user. Be friendly and short. Use plain language; explain any jargon in a few words.

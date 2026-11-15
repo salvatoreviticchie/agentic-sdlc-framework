@@ -12,7 +12,7 @@ A command's own instructions are in `${CLAUDE_PLUGIN_ROOT}/skills/<name>/SKILL.m
 
 Work out which case applies:
 - "$ARGUMENTS" is empty → case 1.
-- "$ARGUMENTS" is one word that names a command, with or without "/sdlc:" or "/" (init, start, explore, new-project, new-feature, replan, new-cr, ship, specify, design, build, review, gate, status, help) → case 2.
+- "$ARGUMENTS" is one word that names a command, with or without "/sdlc:" or "/" (init, start, explore, new-project, new-feature, replan, new-cr, decide, ship, specify, design, build, review, gate, status, help) → case 2.
 - Anything else → case 3. A single word that is close to a command name (e.g. "gates", "shipping") is case 2 for that command.
 
 ## Case 1: the command list
@@ -42,6 +42,11 @@ Print this, as it is:
 |---|---|
 | `/sdlc:new-cr <description>` | Writes a change request with you, one question at a time |
 
+**Architecture decisions**
+| Command | What it does |
+|---|---|
+| `/sdlc:decide "<question>"` | Asks what drives the decision, then writes an ADR (decision record) with options for your stack |
+
 **Running the pipeline**
 | Command | What it does |
 |---|---|
@@ -56,11 +61,12 @@ Print this, as it is:
 | Command | What it does |
 |---|---|
 | `/sdlc:gate <0-4> [FEAT-NNN \| CR-NNN] approve\|reject "<note>"` | Records your approval or rejection, as a commit |
+| `/sdlc:gate adr ADR-NNN approve\|reject "<note>"` | A tech lead or architect accepts or rejects an ADR, as a commit |
 
 **Status and cost**
 | Command | What it does |
 |---|---|
-| `/sdlc:status` | Shows every CR, its stage and the next command |
+| `/sdlc:status` | Shows every CR, its stage and the next command, and every ADR with its status |
 
 Cost: every agent run is a row in `runs/costs.csv`; ask "run the sdlc cost report" for a table per CR and stage. `/sdlc:ship` stops when a stage's budget in `CLAUDE.md` is used up.
 

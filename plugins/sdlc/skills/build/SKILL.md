@@ -1,7 +1,7 @@
 ---
 description: Run the developer agent on a CR whose design passed Gate 3 (optionally one slice)
 argument-hint: CR-NNN [slice]
-allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py agent *), Bash(git status:*), Bash(git log:*), Bash(git branch:*), Bash(git rev-parse:*), Bash(ls:*)
+allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py* agent *), Bash(git status:*), Bash(git log:*), Bash(git branch:*), Bash(git rev-parse:*), Bash(ls:*)
 disable-model-invocation: true
 ---
 Stage: Build, for "$ARGUMENTS" (first word: the CR ID; optional second word: the slice). Explain each step in one plain sentence.

@@ -6,7 +6,7 @@ Subcommands:
   check
       Prints JSON: what is already set up and what is missing, plus suggestions
       for the app folder, the stack and the test command. Changes nothing.
-  apply --app FOLDER --stack generic|salesforce --test-command TEXT
+  apply --app FOLDER --stack generic|salesforce|java|node|dotnet|python --test-command TEXT
         [--claude-md create|append|skip] [--git-init]
       Creates only what is missing and prints JSON with the files it created or
       changed. Running it again changes nothing.
@@ -71,12 +71,38 @@ def real_files(folder):
             if p.is_file() and p.name != ".gitkeep" and not (skip & set(p.relative_to(folder).parts))]
 
 
+STACKS = ["generic", "salesforce", "java", "node", "dotnet", "python"]
+
+# Build files, first match wins (same order as /sdlc:decide step 1). A Salesforce
+# project often has a package.json for its linters, so sfdx-project.json comes first.
+BUILD_FILES = [("salesforce", ["sfdx-project.json"]),
+               ("java", ["pom.xml", "build.gradle", "build.gradle.kts"]),
+               ("dotnet", ["*.sln", "*.csproj", "*.fsproj"]),
+               ("python", ["pyproject.toml", "setup.py", "setup.cfg", "requirements.txt"]),
+               ("node", ["package.json"])]
+SOURCE_SUFFIXES = {".py": "python", ".ts": "node", ".tsx": "node", ".js": "node",
+                   ".java": "java", ".kt": "java", ".cs": "dotnet", ".fs": "dotnet",
+                   ".cls": "salesforce", ".trigger": "salesforce"}
+
+
 def suggest_stack(root, app):
-    """'salesforce' if an sfdx-project.json is in the app folder or the root."""
-    for place in (root / app, root):
-        if (place / "sfdx-project.json").exists():
-            return "salesforce", f"{(place / 'sfdx-project.json').relative_to(root)} exists"
-    return "generic", "no sfdx-project.json found"
+    """The stack profile that fits: a build file in the app folder or the root, else the most
+    common source file type in the app folder, else generic."""
+    for stack, patterns in BUILD_FILES:
+        for place in (root / app, root):
+            for pattern in patterns:
+                found = sorted(place.glob(pattern)) if place.is_dir() else []
+                if found:
+                    return stack, f"{found[0].relative_to(root)} exists"
+    counts = {}
+    for f in real_files(root / app):
+        stack = SOURCE_SUFFIXES.get(f.suffix)
+        if stack:
+            counts[stack] = counts.get(stack, 0) + 1
+    if counts:
+        stack = max(counts, key=counts.get)
+        return stack, f"most source files in {app}/ are {stack} ({counts[stack]} files)"
+    return "generic", "no build file or known source files found"
 
 
 def suggest_test_command(root, app, stack):
@@ -88,6 +114,12 @@ def suggest_test_command(root, app, stack):
         return f"npm --prefix {app} test"
     if (folder / "pom.xml").exists():
         return f"mvn -f {app}/pom.xml test"
+    if (folder / "gradlew").exists():
+        return f"cd {app} && ./gradlew test"
+    if (folder / "build.gradle").exists() or (folder / "build.gradle.kts").exists():
+        return f"cd {app} && gradle test"
+    if any(folder.glob("*.sln")) or any(folder.glob("*.csproj")) or any(folder.glob("*.fsproj")):
+        return f"dotnet test {app}"
     if (folder / "go.mod").exists():
         return f"cd {app} && go test ./..."
     if (folder / "Cargo.toml").exists():
@@ -252,7 +284,7 @@ def main():
     sub.add_parser("check")
     p_apply = sub.add_parser("apply")
     p_apply.add_argument("--app", required=True)
-    p_apply.add_argument("--stack", required=True, choices=["generic", "salesforce"])
+    p_apply.add_argument("--stack", required=True, choices=STACKS)
     p_apply.add_argument("--test-command", required=True)
     p_apply.add_argument("--claude-md", default="create", choices=["create", "append", "skip"])
     p_apply.add_argument("--git-init", action="store_true")

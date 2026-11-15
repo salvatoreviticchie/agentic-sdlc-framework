@@ -1,7 +1,7 @@
 ---
 description: Run the spec-writer agent on an approved CR (needs Gate 1)
 argument-hint: CR-NNN
-allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py agent *), Edit, Bash(git status:*), Bash(git log:*), Bash(git add:*), Bash(git commit:*), Bash(ls:*)
+allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py* agent *), Edit, Bash(git status:*), Bash(git log:*), Bash(git add:*), Bash(git commit:*), Bash(ls:*)
 disable-model-invocation: true
 ---
 Stage: Specify, for "$ARGUMENTS". Explain each step in one plain sentence.

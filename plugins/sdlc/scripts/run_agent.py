@@ -10,8 +10,9 @@ What it does, step by step:
        - plugin installed from a marketplace: the definition is the installed
          plugin version, e.g. "sdlc@1.0.0" (it can't change without an update);
        - plugin used from a git checkout (a local marketplace, or --plugin-dir):
-         it refuses to run if the file has uncommitted changes, and uses the
-         short hash of the last commit that changed the file.
+         it refuses to run if the file has uncommitted changes, uses the
+         short hash of the last commit that changed the file, and passes
+         --plugin-dir to claude so this copy's agent runs (not an installed one).
   3. Reads the "Prompt version:" line from the file.
   4. Runs Claude Code headless, in the project (the git repository you are in):
         claude -p "<prompt>" --agent sdlc:<agent> --output-format json --max-budget-usd <budget>
@@ -127,6 +128,9 @@ def definition_info(agent):
     if inside.returncode != 0 or inside.stdout.strip() != "true":
         info["definition"] = f"{name}@{version}"
         return info
+    # A checkout: the nested claude must load this copy (--plugin-dir), or it
+    # would run the installed plugin's agent while we log this one's version.
+    info["plugin_dir"] = str(PLUGIN_ROOT)
     # 'git status --porcelain -- <file>' prints nothing when the file is clean,
     # and a short code (M = modified, ?? = untracked, ...) when it is not.
     status = run_command(["git", "status", "--porcelain", "--", str(agent_file)], cwd=PLUGIN_ROOT)
@@ -254,6 +258,8 @@ def main():
         "--max-budget-usd", f"{args.budget:.2f}",
         "--permission-mode", args.permission_mode,
     ]
+    if info.get("plugin_dir"):
+        command += ["--plugin-dir", info["plugin_dir"]]
     if args.allowed_tools:
         command += ["--allowed-tools", *args.allowed_tools]
     print(f"Running {args.agent} ({prompt_version} @ {definition_commit}) "

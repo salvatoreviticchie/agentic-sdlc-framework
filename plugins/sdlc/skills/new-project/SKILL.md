@@ -1,7 +1,7 @@
 ---
 description: Plan a new project from an idea - interview, product brief, system design, and a sliced plan of draft CRs (up to Gate 0)
 argument-hint: <the idea in one line>
-allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py agent *), Bash(git status:*), Bash(git log:*), Bash(ls:*), Bash(date:*)
+allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py* agent *), Bash(git status:*), Bash(git log:*), Bash(ls:*), Bash(date:*)
 disable-model-invocation: true
 ---
 The user wants to start a new project: "$ARGUMENTS". You plan it with them, in plain language. Explain each step in one plain sentence.
@@ -26,12 +26,12 @@ Run the `sdlc:planner` agent with:
 If it returns a file as text instead of writing it, save it verbatim with the "saved verbatim by the main session" note (docs/gates.md).
 
 ## After
-1. Check these exist: docs/product-brief.md, docs/design/system.md, specs/features/<FEAT>.md, and specs/change-requests/CR-NNN.md for every CR in the feature's table. Say what is missing, if anything.
-2. Show: the recommended stack in one line (and the other option), then the CR table (CR, title, risk, MVP, depends on) and the MVP line.
+1. Check these exist: docs/product-brief.md, docs/design/system.md, the stack and structure ADRs in docs/adr/ (Status Proposed), specs/features/<FEAT>.md, and specs/change-requests/CR-NNN.md for every CR in the feature's table. Say what is missing, if anything.
+2. Show: the recommended stack in one line (and the other option), the two ADRs (ID, title, stack profile used), then the CR table (CR, title, risk, MVP, depends on) and the MVP line.
 3. List the open questions from the feature file and docs/design/system.md, each with its default.
 4. Say: "Run: planner, <prompt version>, definition <definition>."
 5. Explain Gate 0 in one sentence: you approve the plan (the slicing, the MVP line and the stack) before any CR starts; only then do its CRs become Approved. A new project has no code to explore, so Gate 0 takes the place of Gate 1.
 Nothing is committed yet; /sdlc:gate 0 commits it.
 
 Last line:
-Next: read docs/product-brief.md, docs/design/system.md and specs/features/<FEAT>.md, then /sdlc:gate 0 <FEAT> approve "defaults accepted" (or /sdlc:gate 0 <FEAT> reject "<what to change>")
+Next: read docs/product-brief.md, docs/design/system.md, docs/adr/ and specs/features/<FEAT>.md, then /sdlc:gate 0 <FEAT> approve "defaults accepted" (or /sdlc:gate 0 <FEAT> reject "<what to change>")

@@ -1,7 +1,7 @@
 ---
 description: Run the architect agent on a CR whose specs passed Gate 2
 argument-hint: CR-NNN
-allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py agent *), Bash(git status:*), Bash(git log:*), Bash(ls:*)
+allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py* agent *), Bash(git status:*), Bash(git log:*), Bash(ls:*)
 disable-model-invocation: true
 ---
 Stage: Design, for "$ARGUMENTS". Explain each step in one plain sentence.
@@ -20,7 +20,7 @@ If it returns the note as text instead of writing it, save it verbatim to docs/d
 
 ## After the run
 1. Check docs/design/<CR>.md exists.
-2. Summarise in at most 6 lines: the decision, the files it will change, the slices (if any), and the open questions with defaults.
+2. Summarise in at most 6 lines: the decision, the Accepted ADRs it follows, the files it will change, the slices (if any), and the open questions with defaults. If the architect proposed a superseding ADR, say so first: the design breaks an Accepted ADR, and a tech lead or architect should decide that ADR (/sdlc:gate adr ADR-NNN) before Gate 3.
 3. Say: "Run: architect, <prompt version>, definition <definition>."
 4. Explain Gate 3 in one sentence: you (and a tech lead, if you have one) approve the design before any code is written.
 Nothing is committed yet; /sdlc:gate 3 commits it.
