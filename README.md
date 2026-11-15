@@ -1,7 +1,22 @@
-# agentic-sdlc
+# Agentic SDLC
 
-A pipeline of Claude Code agents for changing an existing codebase, with a human gate after every stage.
-It is for product owners and developers who want agents to do the work while they keep every decision.
+**Agents propose, humans decide.**
+
+Every gate is a recorded decision and every change is traceable from request to test. Features are sliced the way a product owner would slice them: vertical, small, with an MVP line. Tested end to end on a real security change in a Salesforce codebase.
+
+## What makes it different
+
+- **Human gates are dated, recorded decisions**, not just approvals: each one is a commit with your note.
+- **Planning comes before any code**: ideas and features are sliced into small, shippable changes.
+- **Risk tiers**: low-risk changes need fewer gates.
+- **Per-run cost logging with budget caps**: every agent run is logged, and a stage stops when its budget is used up.
+
+```
+/plugin marketplace add salvatoreviticchie/agentic-sdlc-framework
+/plugin install sdlc@agentic-sdlc
+```
+
+Then type `/sdlc:start`.
 
 ## Why
 
