@@ -1,12 +1,16 @@
 ---
 description: Set up this project for the sdlc pipeline - folders, docs/gates.md, the Project settings in CLAUDE.md (asks first) - and say what to run next
 allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/init_project.py*), Bash(git status:*), Bash(git log:*), Bash(git add:*), Bash(git commit:*), Bash(git rev-parse:*), Bash(ls:*)
+argument-hint: "[--defaults]"
 disable-model-invocation: true
 ---
 Set up this project for the sdlc pipeline. The user may be new to it: be friendly and short, use plain language, and explain each step in one plain sentence.
 Running this twice must change nothing: the script creates only what is missing.
 
 The script is `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/init_project.py"` (below: `init_project.py`). Run it from the project folder. It prints JSON.
+
+## Defaults mode (--defaults)
+If "$ARGUMENTS" contains "--defaults", ask no questions: answer yes to git init (question 1), ok to every suggestion (questions 2-4; an empty app folder gets `echo "no tests yet"`), yes to the CLAUDE.md question (append), and yes to committing the code (question 6). Say in one line that defaults mode is on. Everything else is the same. It is for scripted runs such as the plugin's smoke test.
 
 ## 1. Look
 Run `init_project.py check`.

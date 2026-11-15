@@ -1,11 +1,14 @@
 ---
 description: Create a new change request (CR) from the template, asking the PO questions one at a time
-argument-hint: <one-line description of the change>
+argument-hint: "[--defaults] <one-line description of the change>"
 allowed-tools: Read, Glob, Grep, Write, Edit, Bash(git status:*), Bash(git log:*), Bash(git add:*), Bash(git commit:*), Bash(ls:*)
 disable-model-invocation: true
 ---
 The user wants a new change request: "$ARGUMENTS"
 You help them write it as the product owner (PO). Plain language, one question at a time.
+
+## Defaults mode (--defaults)
+If "$ARGUMENTS" contains "--defaults" (anywhere), remove it from the arguments and use the rest as the description. Then ask no questions: take every suggested answer as given, note each as "default accepted", and say in one line that defaults mode is on. An answer written in the arguments themselves (for example "Risk: low") wins over the suggestion. Don't ask "Do you approve this CR as the PO?": approval is the PO's decision, not a default, so keep "Status: Draft" and commit it as a draft. Everything else (preconditions, files, checks, the "Next:" line) is the same. Defaults mode is for scripted runs such as the plugin's smoke test; a person should normally answer the questions.
 
 ## Preconditions
 1. If "$ARGUMENTS" is empty: say "Tell me the change in one line, for example: /sdlc:new-cr Stop completing the wrong task when the number is 0", end with a "Next:" line, and stop.

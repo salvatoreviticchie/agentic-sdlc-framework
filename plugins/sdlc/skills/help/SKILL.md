@@ -21,7 +21,7 @@ Print this, as it is:
 **Getting started**
 | Command | What it does |
 |---|---|
-| `/sdlc:init` | Sets up the folders, `docs/gates.md` and Project settings in `CLAUDE.md` (asks first) |
+| `/sdlc:init [--defaults]` | Sets up the folders, `docs/gates.md` and Project settings in `CLAUDE.md` (asks first) |
 | `/sdlc:start` | Checks the setup, explains the pipeline and says what to run first |
 | `/sdlc:explore` | Reads your existing code and writes what it does today as specs |
 | `/sdlc:help [command \| "question"]` | This list, one command explained, or an answer from the guide |
@@ -29,23 +29,23 @@ Print this, as it is:
 **New project**
 | Command | What it does |
 |---|---|
-| `/sdlc:new-project <idea>` | Interviews you, then plans the idea as small change requests (CRs) |
+| `/sdlc:new-project [--defaults] <idea>` | Interviews you, then plans the idea as small change requests (CRs) |
 
 **Big feature**
 | Command | What it does |
 |---|---|
-| `/sdlc:new-feature <description>` | Plans a change too big for one CR as several small CRs |
+| `/sdlc:new-feature [--defaults] <description>` | Plans a change too big for one CR as several small CRs |
 | `/sdlc:replan FEAT-NNN` | Updates a feature's remaining CRs after one is merged |
 
 **Single change**
 | Command | What it does |
 |---|---|
-| `/sdlc:new-cr <description>` | Writes a change request with you, one question at a time |
+| `/sdlc:new-cr [--defaults] <description>` | Writes a change request with you, one question at a time |
 
 **Architecture decisions**
 | Command | What it does |
 |---|---|
-| `/sdlc:decide "<question>"` | Asks what drives the decision, then writes an ADR (decision record) with options for your stack |
+| `/sdlc:decide [--defaults] "<question>"` | Asks what drives the decision, then writes an ADR (decision record) with options for your stack |
 
 **Running the pipeline**
 | Command | What it does |
@@ -67,6 +67,8 @@ Print this, as it is:
 | Command | What it does |
 |---|---|
 | `/sdlc:status` | Shows every CR, its stage and the next command, and every ADR with its status |
+
+No person at the keyboard (a script or CI): `/sdlc:init`, `/sdlc:new-project`, `/sdlc:new-feature`, `/sdlc:new-cr` and `/sdlc:decide` accept `--defaults`, which takes every suggested answer without asking, e.g. `/sdlc:decide --defaults "one package or several?"`. It never approves anything: the gates still need a person (or a script acting as one).
 
 Cost: every agent run is a row in `runs/costs.csv`; ask "run the sdlc cost report" for a table per CR and stage. `/sdlc:ship` stops when a stage's budget in `CLAUDE.md` is used up.
 

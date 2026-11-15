@@ -159,8 +159,9 @@ Rules learned from the first real change, in full in [docs/lessons.md](docs/less
 - `.claude-plugin/marketplace.json`: this repository is a plugin marketplace named `agentic-sdlc`.
 - `plugins/sdlc/`: the plugin, and the single source of the framework: `agents/`, `skills/` (the `/sdlc:` commands), `templates/` (including `gates.md`, which `/sdlc:init` copies into a project) and `scripts/`.
 - `examples/tiny-app/`: the practice app for the walkthrough.
+- `plugins/sdlc/tests/`: the plugin's self-tests: `check.py` (free, no AI) and `smoke.py` (a live end-to-end run).
 
-To release a change to the plugin, raise `version` in `plugins/sdlc/.claude-plugin/plugin.json`: installed copies update only when it changes. Check with `claude plugin validate ./plugins/sdlc` and `claude plugin validate .`.
+**Releasing** (for contributors): the checklist is in [docs/releasing.md](docs/releasing.md): run `check.py` and `smoke.py`, raise the version in `plugins/sdlc/.claude-plugin/plugin.json` (installed copies update only when it changes), sync to the public repository, push, and update your own install.
 
 ## License
 

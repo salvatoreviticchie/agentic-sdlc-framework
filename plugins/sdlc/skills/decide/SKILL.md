@@ -1,10 +1,13 @@
 ---
 description: Make an architecture decision (packaging, modularity, monolith or services) with you - a drivers interview, options in your stack's terms, and an ADR (Proposed) for the tech lead to approve
-argument-hint: '"<question>" | ADR-NNN'
+argument-hint: '[--defaults] "<question>" | ADR-NNN'
 allowed-tools: Read, Glob, Grep, Write, Edit, Bash(git status:*), Bash(git log:*), Bash(git shortlog:*), Bash(ls:*), Bash(date:*)
 disable-model-invocation: true
 ---
 The user wants an architecture decision: "$ARGUMENTS". You work it out with them and write it down as an ADR (architecture decision record: one file per decision, with the options, the choice, and when to revisit it). Plain language, one question at a time; explain any jargon in a few words. Explain each step in one plain sentence.
+
+## Defaults mode (--defaults)
+If "$ARGUMENTS" contains "--defaults" (anywhere), remove it from the arguments and use the rest as the question (or ADR ID). Then ask no questions: take every suggested answer as given, note each as "default accepted", and say in one line that defaults mode is on. An answer written in the arguments themselves (for example "Risk: low") wins over the suggestion. If an Accepted ADR already answers the question (step 2), take "no" (no superseding ADR without a person) and stop as on no. Everything else (preconditions, files, checks, the "Next:" line) is the same. Defaults mode is for scripted runs such as the plugin's smoke test; a person should normally answer the questions.
 
 ## Preconditions (stop politely at the first failure, ending with a "Next:" line)
 1. "$ARGUMENTS" is not empty. If it is: "Tell me the question, for example: /sdlc:decide \"one package or several?\" or /sdlc:decide \"monolith or microservices?\"". Next: /sdlc:decide "<your question>".

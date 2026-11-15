@@ -1,10 +1,13 @@
 ---
 description: Plan a big feature of the existing app as a feature file and a sliced plan of draft CRs (up to Gate 0)
-argument-hint: <the feature in one line>
+argument-hint: "[--defaults] <the feature in one line>"
 allowed-tools: Read, Glob, Grep, Bash(python3 *scripts/ship.py* agent *), Bash(git status:*), Bash(git log:*), Bash(ls:*), Bash(date:*)
 disable-model-invocation: true
 ---
 The user wants a feature that is too big for one change request: "$ARGUMENTS". You plan it with them, in plain language. Explain each step in one plain sentence.
+
+## Defaults mode (--defaults)
+If "$ARGUMENTS" contains "--defaults" (anywhere), remove it from the arguments and use the rest as the feature. Then ask no questions: take every suggested answer as given, note each as "default accepted", and say in one line that defaults mode is on. An answer written in the arguments themselves (for example "Risk: low") wins over the suggestion. The planner still writes its 5 questions; record each default as the answer and go straight to the plan. Everything else (preconditions, files, checks, the "Next:" line) is the same. Defaults mode is for scripted runs such as the plugin's smoke test; a person should normally answer the questions.
 
 ## Preconditions (stop politely at the first failure, ending with a "Next:" line)
 1. "$ARGUMENTS" is not empty. If it is: "Tell me the feature in one line, for example: /sdlc:new-feature due dates and reminders". Next: /sdlc:new-feature <description>.
