@@ -1,0 +1,14 @@
+{
+  "name": "agentic-sdlc",
+  "owner": {
+    "name": "Salvatore Viticchiè"
+  },
+  "description": "The agentic-sdlc framework as a Claude Code plugin.",
+  "plugins": [
+    {
+      "name": "sdlc",
+      "source": "./plugins/sdlc",
+      "description": "Agents explore, plan, specify, design, build and review changes to your code; you approve at every gate."
+    }
+  ]
+}
